@@ -1,0 +1,74 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>CC 学习进度</title>
+<style>
+  :root { --bg: #f6f7f9; --card: #fff; --text: #1f2328; --muted: #6b7280; --line: #e5e7eb;
+          --done: #16a34a; --doing: #2563eb; --paused: #d97706; --todo: #9ca3af; }
+  @media (prefers-color-scheme: dark) {
+    :root { --bg: #0f1115; --card: #181b21; --text: #e6e8eb; --muted: #9aa1ab; --line: #2a2f37; }
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--bg); color: var(--text);
+         font-family: -apple-system, "PingFang SC", "Microsoft YaHei", sans-serif; line-height: 1.5; }
+  main { max-width: 760px; margin: 0 auto; padding: 32px 16px 48px; }
+  h1 { font-size: 26px; margin: 0 0 4px; }
+  .sub { color: var(--muted); margin: 0 0 20px; }
+  .bar { height: 10px; background: var(--line); border-radius: 5px; overflow: hidden; }
+  .bar > div { height: 100%; background: var(--done); }
+  .stat { display: flex; justify-content: space-between; font-size: 14px; color: var(--muted); margin: 6px 0 24px; }
+  ol { list-style: none; padding: 0; margin: 0; }
+  li { background: var(--card); border: 1px solid var(--line); border-radius: 8px;
+       padding: 12px 14px; margin-bottom: 8px; display: grid; grid-template-columns: 44px 1fr auto; gap: 10px; align-items: center; }
+  .lv { font-weight: 700; font-size: 18px; color: var(--muted); }
+  .name { font-weight: 600; }
+  .note { color: var(--muted); font-size: 13px; }
+  .tag { font-size: 12px; padding: 2px 10px; border-radius: 99px; color: #fff; white-space: nowrap; }
+  .done { background: var(--done); } .doing { background: var(--doing); }
+  .paused { background: var(--paused); } .todo { background: var(--todo); }
+  footer { margin-top: 24px; font-size: 13px; color: var(--muted); }
+</style>
+</head>
+<body>
+<main>
+  <h1>Claude Code 学习进度</h1>
+  <p class="sub">团队 AI 能力清单 · 1→16 级</p>
+  <div class="bar"><div id="fill"></div></div>
+  <div class="stat"><span id="count"></span><span>更新于 2026-09-26</span></div>
+  <ol id="list"></ol>
+  <footer>本页由 Claude Code 在本地生成，通过 GitHub Pages 发布（第 14 级练习）。</footer>
+</main>
+<script>
+const LEVELS = [
+  ["1",   "用跳过权限确认的方式启动 CC", "done"],
+  ["2",   "保存 session 进度，下次能接上", "done"],
+  ["2.5", "理解 CC 的 4 层记忆/指令体系", "done"],
+  ["3",   "切换模型", "done"],
+  ["4",   "用 caffeinate -d 防止息屏", "done"],
+  ["5",   "查看用量和花费", "done"],
+  ["5.5", "安装 HUD 状态栏插件", "done"],
+  ["6",   "用 CC 做私人秘书：本地文件夹 + MD 文件", "done"],
+  ["7",   "用 CC 读取/修改文件和表格", "done"],
+  ["8",   "截图+文字教会 AI 操作流程，写成 Skill", "done"],
+  ["9",   "用 CC 批量处理产品内容", "done", "批量生成 SEO Title/Description"],
+  ["10",  "用 CC 管理 GitHub Skill 仓库", "done", "branch → push → PR → merge 全流程"],
+  ["11",  "用 CC 读取数据库查信息", "paused", "等 Supabase 账号后再练"],
+  ["12",  "用 CC 做数据分析和决策支持", "done", "一周销售数据分析 + 可视化看板"],
+  ["13",  "用 CC 调浏览器读取/写入系统", "done", "Playwright：读取、点击、填表、批量改价"],
+  ["14",  "GitHub 建仓库部署网页", "doing", "就是你正在看的这个页面"],
+  ["15",  "用 CC 监控和定时任务", "todo"],
+  ["16",  "用 CC 提取微信待办", "todo"],
+];
+const LABEL = { done: "已完成", doing: "进行中", paused: "暂停", todo: "未开始" };
+document.getElementById("list").innerHTML = LEVELS.map(([lv, name, st, note]) => `
+  <li><span class="lv">${lv}</span>
+      <span><div class="name">${name}</div>${note ? `<div class="note">${note}</div>` : ""}</span>
+      <span class="tag ${st}">${LABEL[st]}</span></li>`).join("");
+const done = LEVELS.filter(l => l[2] === "done").length;
+document.getElementById("count").textContent = `已完成 ${done} / ${LEVELS.length}`;
+document.getElementById("fill").style.width = (done / LEVELS.length * 100) + "%";
+</script>
+</body>
+</html>
